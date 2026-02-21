@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trilhas da Prevenção - Droga Zero</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body { 
+            margin: 0; padding: 0;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            height: 100vh; overflow: hidden;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #2c3e50 url('IMG-20240613-WA0009.jpg') no-repeat center center;
+            background-size: cover;
+        }
+
+        .overlay-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.9) 100%);
+            z-index: 0;
+        }
+
+        .container-main { position: relative; z-index: 10; text-align: center; width: 95%; max-width: 900px; }
+        
+        h1 { 
+            font-size: 2.6rem; font-weight: 900; color: white;
+            margin: 0; text-transform: uppercase;
+            text-shadow: 3px 3px 10px rgba(0,0,0,1);
+        }
+
+        .sub-titulo {
+            font-size: 1.3rem; font-weight: 700; color: #f1c40f;
+            margin: 5px 0 20px 0; text-transform: uppercase;
+            text-shadow: 2px 2px 5px rgba(0,0,0,1);
+        }
+
+        #wheel-container { 
+            width: 400px; height: 400px; margin: 0 auto; position: relative; 
+            border: 10px solid white; border-radius: 50%; background: #1a1a1a;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+        }
+
+        #wheel { 
+            width: 100%; height: 100%; border-radius: 50%;
+            /* TEMPO DE GIRO: 5 SEGUNDOS */
+            transition: transform 5s cubic-bezier(0.15, 0, 0.15, 1);
+            background: conic-gradient(
+                from 0deg,
+                #E74C3C 0deg 36deg, #000 36deg 37deg,
+                #e67e22 37deg 72deg, #000 72deg 73deg,
+                #E74C3C 73deg 108deg, #000 108deg 109deg,
+                #e67e22 109deg 144deg, #000 144deg 145deg,
+                #E74C3C 145deg 180deg, #000 180deg 181deg,
+                #e67e22 181deg 216deg, #000 216deg 217deg,
+                #E74C3C 217deg 252deg, #000 252deg 253deg,
+                #e67e22 253deg 288deg, #000 288deg 289deg,
+                #E74C3C 289deg 324deg, #000 324deg 325deg,
+                #e67e22 325deg 360deg
+            );
+        }
+
+        .number {
+            position: absolute; width: 100%; height: 100%; text-align: center;
+            font-weight: 900; color: white; font-size: 2.2em; padding-top: 15px;
+            text-shadow: 2px 3px 6px rgba(0,0,0,0.9);
+        }
+
+        #pointer { 
+            position: absolute; top: -25px; left: 50%; transform: translateX(-50%); 
+            z-index: 100; width: 0; height: 0; border-left: 25px solid transparent; 
+            border-right: 25px solid transparent; border-top: 50px solid #f1c40f;
+            filter: drop-shadow(0 5px 5px black);
+        }
+
+        .btn-spin {
+            background: white; color: #2c3e50; border: 4px solid #2c3e50;
+            width: 100px; height: 100px; font-size: 1.1em; font-weight: 900; border-radius: 50%; 
+            cursor: pointer; position: absolute; top: 50%; left: 50%; 
+            transform: translate(-50%, -50%); z-index: 60;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        #overlay-result { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); display: none;
+            flex-direction: column; align-items: center; justify-content: center; z-index: 200;
+        }
+
+        #res-card { padding: 40px; border-radius: 30px; color: #1e272e; background: white; max-width: 800px; text-align: center; }
+
+        .footer {
+            position: absolute; bottom: 10px; width: 100%; text-align: center;
+            color: white; font-size: 0.9rem; z-index: 10; text-shadow: 1px 1px 3px black;
+        }
+
+        .shake { animation: shake 0.5s infinite ease-in-out; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-12px); }
+            75% { transform: translateX(12px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="overlay-bg"></div>
+
+    <div class="container-main">
+        <h1>Trilhas da Prevenção: escolhas que contam</h1>
+        <div class="sub-titulo">Coordenação Estadual de Enfrentamento às Drogas</div>
+        
+        <div id="wheel-container">
+            <div id="pointer"></div>
+            <button id="btn-spin" class="btn-spin" onclick="girar()">GIRAR</button>
+            <div id="wheel"></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        Criado por: Paulo Xavier, Psicólogo, CRP-20/09816
+    </div>
+
+    <div id="overlay-result">
+        <div id="res-card">
+            <h1 id="res-tipo" style="font-size: 2.5rem; margin-top: 0;"></h1>
+            <p id="res-text" style="font-size: 1.6rem; font-weight: 600; line-height: 1.4; text-align: left;"></p>
+            <button onclick="fechar()" style="padding: 18px 50px; cursor: pointer; background: #2c3e50; color: white; border: none; border-radius: 15px; font-weight: bold; font-size: 1.3rem; margin-top: 25px;">CONTINUAR JOGO</button>
+        </div>
+    </div>
+
+    <audio id="som-autonomia" src="Som de Aplausos ° Efeito Especial para seu vídeo. Sem direitos autorais - Joice Lacerda (youtube).mp3"></audio>
+    <audio id="som-armadilha" src="Sound Fail (Som de falha).mp3"></audio>
+    <audio id="som-giro" src="Video Project 28.m4a" preload="auto"></audio>
+
+    <script>
+        const cenarios = [
+            { id: 0, tipo: "Armadilha - Vermelha", cor: "#E74C3C", txt: "1) Você se recusou a participar de uma atividade lúdico-interativa sobre prevenção ao uso e/ou abuso de substâncias psicoativas (SPA) na escola. Volte duas casas." },
+            { id: 1, tipo: "Autonomia e Proteção - Laranja", cor: "#e67e22", txt: "2) Você aceitou participar de uma atividade lúdico-interativa sobre prevenção ao uso e/ou abuso de substâncias psicoativas (SPA) na escola. Avance duas casas." },
+            { id: 2, tipo: "Armadilha - Vermelha", cor: "#E74C3C", txt: "3) Numa festa, na Praça Germano Sampaio, você usou muitas drogas diferentes ao mesmo tempo e teve uma overdose. Fique um turno sem jogar." },
+            { id: 3, tipo: "Autonomia e Proteção - Laranja", cor: "#e67e22", txt: "4) Após uma palestra de prevenção você alertou seus amigos a não usarem muitas drogas ao mesmo tempo. Avance uma casa." },
+            { id: 4, tipo: "Armadilha - Vermelha", cor: "#E74C3C", txt: "5) Um rapaz bem mais velho que você ofereceu drogas e você aceitou. Volte uma casa." },
+            { id: 5, tipo: "Autonomia e Proteção - Laranja", cor: "#e67e22", txt: "6) Alguém lhe ofereceu um cigarro estranho na Praça das Águas e você recusou. Avance uma casa." },
+            { id: 6, tipo: "Armadilha - Vermelha", cor: "#E74C3C", txt: "7) Você ofereceu drogas para um amigo que nunca usou, agora ele está passando mal. Fique um turno sem jogar." },
+            { id: 7, tipo: "Autonomia e Proteção - Laranja", cor: "#e67e22", txt: "8) Você informou os perigos de usar uma substância desconhecida que seu amigo queria experimentar. Avance duas casas." },
+            { id: 8, tipo: "Armadilha - Vermelha", cor: "#E74C3C", txt: "9) Você roubou dinheiro de um membro da família para comprar drogas. Volte duas casas." },
+            { id: 9, tipo: "Autonomia e Proteção - Laranja", cor: "#e67e22", txt: "10) Seus amigos acharam um líquido estranho que provocava alterações de comportamento no Parque Anauá. Logo, você recusou o uso e alertou sobre os perigos da substância. Avance duas casas." }
+        ];
+
+        let fila = [];
+        let anguloAtual = 0;
+        const wheel = document.getElementById('wheel');
+
+        for (let i = 0; i < 10; i++) {
+            const div = document.createElement('div');
+            div.className = 'number';
+            div.style.transform = `rotate(${(i * 36) + 18}deg)`;
+            div.innerHTML = i + 1;
+            wheel.appendChild(div);
+        }
+
+        function girar() {
+            if (fila.length === 0) fila = [...cenarios].sort(() => Math.random() - 0.5);
+            const btn = document.getElementById('btn-spin');
+            const somGiro = document.getElementById('som-giro');
+            btn.disabled = true;
+
+            somGiro.currentTime = 0;
+            somGiro.loop = true;
+            somGiro.play();
+
+            const sorteado = fila.pop();
+            const indexOriginal = sorteado.id;
+            const voltas = 1800; 
+            const ajusteSeta = 18;
+            const destino = (360 - (indexOriginal * 36)) - ajusteSeta;
+            
+            anguloAtual += voltas + (destino - (anguloAtual % 360));
+            wheel.style.transform = `rotate(${anguloAtual}deg)`;
+
+            // TEMPO SINCRONIZADO: 5000ms
+            setTimeout(() => {
+                somGiro.pause();
+                somGiro.loop = false;
+
+                document.getElementById('res-tipo').innerText = sorteado.tipo;
+                document.getElementById('res-tipo').style.color = sorteado.cor;
+                document.getElementById('res-text').innerText = sorteado.txt;
+                document.getElementById('overlay-result').style.display = 'flex';
+                
+                if(sorteado.tipo.includes("Autonomia")) {
+                    document.getElementById('som-autonomia').play();
+                    confetti({ particleCount: 200, spread: 70, origin: { y: 0.6 } });
+                } else {
+                    document.getElementById('som-armadilha').play();
+                    document.getElementById('res-card').classList.add('shake');
+                }
+                btn.disabled = false;
+            }, 5000); 
+        }
+
+        function fechar() { 
+            document.getElementById('overlay-result').style.display = 'none';
+            document.getElementById('res-card').classList.remove('shake');
+            document.getElementById('som-autonomia').pause();
+            document.getElementById('som-armadilha').pause();
+        }
+    </script>
+</body>
+</html>
