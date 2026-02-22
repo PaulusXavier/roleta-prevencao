@@ -1,0 +1,16 @@
+{
+  "name": "Trilhas da Prevenção",
+  "short_name": "Prevenção",
+  "description": "App de Prevenção ao uso de Drogas",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#2c3e50",
+  "theme_color": "#2c3e50",
+  "icons": [
+    {
+      "src": "Logo-Photoroom.jpg",
+      "sizes": "192x192",
+      "type": "image/jpg"
+    }
+  ]
+}
