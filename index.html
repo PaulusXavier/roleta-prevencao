@@ -30,7 +30,17 @@
 
         .container-main { position: relative; z-index: 10; text-align: center; width: 95%; max-width: 900px; }
         
-        .logo-top { width: 100px; border-radius: 15px; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        /* LOGO REDONDA ATUALIZADA */
+        .logo-top { 
+            width: 130px; 
+            height: 130px; /* Altura igual à largura para círculo perfeito */
+            border-radius: 50%; /* Faz ficar redondo */
+            object-fit: cover; /* Garante que a imagem não estique */
+            margin-bottom: 15px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+            border: 4px solid white;
+            background-color: white; /* Fundo branco caso a logo seja transparente */
+        }
 
         h1 { 
             font-size: 2.2rem; font-weight: 900; color: white;
@@ -40,12 +50,12 @@
 
         .sub-titulo {
             font-size: 1.1rem; font-weight: 700; color: #f1c40f;
-            margin: 5px 0 15px 0; text-transform: uppercase;
+            margin: 5px 0 20px 0; text-transform: uppercase;
             text-shadow: 2px 2px 5px rgba(0,0,0,1);
         }
 
         #wheel-container { 
-            width: 380px; height: 380px; margin: 0 auto; position: relative; 
+            width: 360px; height: 360px; margin: 0 auto; position: relative; 
             border: 10px solid white; border-radius: 50%; background: #1a1a1a;
             box-shadow: 0 20px 50px rgba(0,0,0,0.8);
         }
@@ -70,7 +80,7 @@
 
         .number {
             position: absolute; width: 100%; height: 100%; text-align: center;
-            font-weight: 900; color: white; font-size: 2em; padding-top: 15px;
+            font-weight: 900; color: white; font-size: 1.8em; padding-top: 15px;
             text-shadow: 2px 3px 6px rgba(0,0,0,0.9);
         }
 
@@ -83,7 +93,7 @@
 
         .btn-spin {
             background: white; color: #2c3e50; border: 4px solid #2c3e50;
-            width: 90px; height: 90px; font-size: 1em; font-weight: 900; border-radius: 50%; 
+            width: 85px; height: 85px; font-size: 1em; font-weight: 900; border-radius: 50%; 
             cursor: pointer; position: absolute; top: 50%; left: 50%; 
             transform: translate(-50%, -50%); z-index: 60;
             box-shadow: 0 5px 15px rgba(0,0,0,0.5);
@@ -115,9 +125,10 @@
     <div class="overlay-bg"></div>
 
     <div class="container-main">
-        <img src="Logo-Photoroom.jpg" class="logo-top" alt="Logo">
-        <h1>Trilhas da Prevenção</h1>
-        <div class="sub-titulo">Escolhas que contam - Droga Zero</div>
+        <img src="Logo.jpg" class="logo-top" alt="Logo">
+        
+        <h1>Trilhas da Prevenção: escolhas que contam</h1>
+        <div class="sub-titulo">Coordenação Estadual de Enfrentamento às Drogas</div>
         
         <div id="wheel-container">
             <div id="pointer"></div>
@@ -134,7 +145,7 @@
         <div id="res-card">
             <h1 id="res-tipo" style="font-size: 2.2rem; margin-top: 0;"></h1>
             <p id="res-text" style="font-size: 1.5rem; font-weight: 600; line-height: 1.4; text-align: left;"></p>
-            <button onclick="fechar()" style="padding: 15px 40px; cursor: pointer; background: #2c3e50; color: white; border: none; border-radius: 12px; font-weight: bold; font-size: 1.2rem; margin-top: 20px;">CONTINUAR</button>
+            <button onclick="fechar()" style="padding: 15px 40px; cursor: pointer; background: #2c3e50; color: white; border: none; border-radius: 12px; font-weight: bold; font-size: 1.2rem; margin-top: 20px;">CONTINUAR JOGO</button>
         </div>
     </div>
 
@@ -159,7 +170,6 @@
         let anguloAtual = 0;
         const wheel = document.getElementById('wheel');
 
-        // Criar números na roleta
         for (let i = 0; i < 10; i++) {
             const div = document.createElement('div');
             div.className = 'number';
@@ -179,8 +189,7 @@
 
             const sorteado = bancoPerguntas[Math.floor(Math.random() * bancoPerguntas.length)];
             const voltas = 1800; 
-            const ajusteSeta = 18;
-            const destino = (360 - (sorteado.id * 36)) - ajusteSeta;
+            const destino = (360 - (sorteado.id * 36)) - 18;
             
             anguloAtual += voltas + (destino - (anguloAtual % 360));
             wheel.style.transform = `rotate(${anguloAtual}deg)`;
@@ -210,12 +219,12 @@
             document.getElementById('res-card').classList.remove('shake');
         }
 
-        // REGISTRO DO SERVICE WORKER (Para funcionar como Aplicativo Offline)
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/roleta-prevencao/sw.js')
-            .then(() => console.log("Service Worker registrado com sucesso!"))
-            .catch(err => console.log("Falha ao registrar Service Worker:", err));
+            navigator.serviceWorker.register('/roleta-prevencao/sw.js');
         }
     </script>
 </body>
 </html>
+</body>
+</html>
+
